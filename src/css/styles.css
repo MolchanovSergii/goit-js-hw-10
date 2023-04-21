@@ -33,6 +33,7 @@ img {
 .country-info {
   display: inline;
 }
+
 .country-info div {
   display: flex;
   align-items: center;
