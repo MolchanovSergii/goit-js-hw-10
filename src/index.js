@@ -6,7 +6,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 Notify.init({
   width: '100%',
   position: 'left-bottom',
-  fontSize: '20px',
+  fontSize: '30px',
   closeButton: false,
 });
 
@@ -21,10 +21,12 @@ const countryInfo = document.querySelector('.country-info');
 input.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
 function onInput(e) {
+    
     let userInput = e.target.value.trim();
 
     if (!userInput) {
-        clearUserInput(); 
+        countryList.innerHTML = '';
+        countryInfo.innerHTML = '';   
         return;
     }
 
@@ -33,10 +35,10 @@ function onInput(e) {
     fetchCountries(urlQuery)
         .then(data => {
             if (data.length === 1) {
-                clearUserResult(); 
+                countryList.innerHTML = ''; 
                 countryInfo.innerHTML = createMarkupCountryInfo(data);
             } else if (data.length > 1 && data.length <= 10) {
-                clearUserResult(); 
+                countryInfo.innerHTML = ''; 
                 countryList.innerHTML = createMarkupCountryList(data);
             } else {
                 Notify.info('Too many matches found. Please enter a more specific name.');
@@ -78,9 +80,4 @@ function createMarkupCountryInfo(arr) {
     `
       )
       .join('');
-}
-// очищает разметку, если пользователь вносил изменения 
-function clearUserResult() {
-    countryList.innerHTML = '';
-    countryInfo.innerHTML = '';    
 }
