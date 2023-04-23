@@ -46,7 +46,9 @@ function onInput(e) {
     })
     .catch(err => {
       eraseMarkup();
-      Notify.failure('Oops, there is no country with that name');
+      if (err.message === '404') {
+        Notify.failure('Oops, there is no country with that name');
+      }else {Notify.failure(`Oops,${err.message}`);}
     });
 }
 
