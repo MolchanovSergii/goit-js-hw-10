@@ -25,29 +25,32 @@ function onInput(e) {
     let userInput = e.target.value.trim();
 
     if (!userInput) {
-        countryList.innerHTML = '';
-        countryInfo.innerHTML = '';   
-        return;
+      eraseMarkup()  
+      return;
     }
 
     const urlQuery = `${BASE_URL}/${END_POINT}/${userInput}/${FILTER_PARAM}&=`;
 
-    fetchCountries(urlQuery)
-        .then(data => {
-            if (data.length === 1) {
-                countryList.innerHTML = ''; 
-                countryInfo.innerHTML = createMarkupCountryInfo(data);
-            } else if (data.length > 1 && data.length <= 10) {
-                countryInfo.innerHTML = ''; 
-                countryList.innerHTML = createMarkupCountryList(data);
-            } else {
-                Notify.info('Too many matches found. Please enter a more specific name.');
-            }  
-        })
-        .catch(err =>
-            Notify.failure('Oops, there is no country with that name')
-      );
+  fetchCountries(urlQuery)
+    .then(data => {
+      if (data.length === 1) {
+        eraseMarkup();
+        countryInfo.innerHTML = createMarkupCountryInfo(data);
+      } else if (data.length > 1 && data.length <= 10) {
+        eraseMarkup();
+        countryList.innerHTML = createMarkupCountryList(data);
+      } else {
+        eraseMarkup();
+        Notify.info('Too many matches found. Please enter a more specific name.');
+      }
+    })
+    .catch(err => {
+      eraseMarkup();
+      Notify.failure('Oops, there is no country with that name');
+    });
 }
+
+
 
 // рисует разметку, если стран >1 и <=10
 function createMarkupCountryList(arr) {
@@ -76,8 +79,14 @@ function createMarkupCountryInfo(arr) {
         </div>
         <p><strong>Capital: </strong><span>${capital}</span></p>
         <p><strong>Population: </strong><span>${population}</span></p>
-        <p><strong>Languages: </strong><span>${Object.values(languages)}</span></p>
+        <p><strong>Languages: </strong><span>${Object.values(languages).join(', ')}</span></p>
     `
       )
       .join('');
+}
+
+function eraseMarkup() {
+  countryList.innerHTML = '';
+  countryInfo.innerHTML = '';
+  return;
 }
