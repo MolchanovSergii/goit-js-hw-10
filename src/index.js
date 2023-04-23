@@ -45,10 +45,11 @@ function onInput(e) {
       }
     })
     .catch(err => {
+      console.dir(err);
       eraseMarkup();
-      if (err.message === '404') {
+      if (err.status === 404) {
         Notify.failure('Oops, there is no country with that name');
-      }else {Notify.failure(`Oops,${err.message}`);}
+      }else {Notify.failure(`Oops,${err.statusText}`);}
     });
 }
 
